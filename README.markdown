@@ -35,9 +35,9 @@ its twist are given by
 the number of prime-order curves and doubly-prime-order
 curves in the interval `j < 2^20` are given by:
 
-    | prime | 
-    |-------|----------------
-    | P256  |  825   |  4   |
+    | p     | prime  | doubly prime |
+    |-------|------------------------
+    | P256  |   825  |          4   |
 
 (up to about 500k)
  

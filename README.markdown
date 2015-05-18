@@ -26,7 +26,7 @@ of each curve `K_j = E(j)/F_p` for the non-singular
 curves (`j != 0, 1728`) for `j < 2^20` and `#K_j`
 prime.
 
-Noting that the number of points on the curve and the
+Noting that the number of points on the curve and 
 its twist are given by
 
     #K   = p - T_f + 1

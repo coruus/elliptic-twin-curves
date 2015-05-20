@@ -1,0 +1,82 @@
+\documentclass[11pt,fleqn]{article}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{unicode-math}
+
+
+\title{Distribution of $\#E^t$ for prime-order elliptic curves: Numerical results}
+\author{David Leon Gil}
+
+\newcommand{\Z}{\ensuremath{\BbbZ_q}}
+\newcommand{\Zq}{\ensuremath{\BbbZ_q}}
+\newcommand{\Ej}{\ensuremath{E(\BbbZ_q)_j}}
+\newcommand{\Ejt}{\ensuremath{E^t(\BbbZ_j)}}
+\newcommand{\Tf}{\ensuremath{T_f(j)}}
+\newcommand{\Pa}{\ensuremath{P_{224}}}
+\newcommand{\Pb}{\ensuremath{P_{256}}}
+\newcommand{\Pc}{\ensuremath{P_{384}}}
+
+\begin{document}
+
+\section{Introduction}
+
+This is a preliminary note of some numerical experiments; the results
+may be rather wrong.
+
+\section{Prime-order curves}
+
+Let $\Zq$ be a finite field in characteristic greater than 3,
+$\Ej$ be the elliptic curve defined by
+
+\begin{equation}
+\Ej \equiv x^3 = y^2 + \frac{36 x}{j - 1728} - \frac{1}{j - 1728}
+\end{equation}
+
+and $\Ejt$ be some curve automorphic to its quadratic twist
+
+\begin{equation}
+\Ejt \equiv x^3 = y^2 + \beta^2 \frac{36 x}{j - 1728} - \beta^3 \frac{1}{j - 1728}
+\end{equation}
+
+where $\beta$ is a quadratic non-residue in \Zq.
+
+Then
+
+\begin{equation}
+\begin{aligned}
+\#\Ej  =& q - \Tf + 1 \\
+\#\Ejt =& q + \Tf + 1 \\
+\end{aligned}
+\end{equation}
+
+for some \Tf, which is the trace of \Ej.
+
+We observe that the mapping between the $j$-invariant and $c$, as
+defined in XXXX, is an isomorphism.
+
+\section{Numerical methods}
+
+\subsection{Finding prime-order curves}
+
+A slightly modified version of PARI/GP was used to calculate the
+traces of prime-order curves. Point-counting was aborted early
+if $\#K$ was found to have a small prime factor.
+
+\subsection{Range} 
+
+We calculate \Tf for each \Ej for $0 < j < 2^20, j != 1728$.
+
+\section{Results} 
+
+
+\begin{tabular}[l]{l|rrrr}
+  $q$ & $N_{\pi}$ & $N_{\pi'}$ & $N_{\pi'} / N_{\pi}$ \\
+  \Pa & \\
+  \Pb & \\
+  \Pc & \\
+  
+\end{tabular}
+
+%http://arxiv.org/pdf/0902.4332.pdf 
+
+\end{document}

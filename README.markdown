@@ -1,7 +1,7 @@
 # Soleil
 
-**PDF of factors of twists of curves over the Solinas
-primes I: Numerical results**
+Distribution of the orders of twists of prime-order curves:
+Numerical results
 
 
 Let `F_p` be a finite field over a prime `p`, and
@@ -22,8 +22,8 @@ and the Mersenne prime `M_521`:
 --
 
 For each of these primes, we calculate the trace, `T_f`,
-of each curve `K_j = E(j)/F_p` for the non-singular
-curves (`j != 0, 1728`) for `j < 2^20` and `#K_j`
+of each non-singular `K_j = E(j)/F_p` curve
+(`j != 0, 1728`) for `j < 2^20` and `#K_j`
 prime.
 
 Noting that the number of points on the curve and 
@@ -35,12 +35,14 @@ its twist are given by
 the number of prime-order curves and doubly-prime-order
 curves in the interval `j < 2^20` are given by:
 
-    | p     | prime  | doubly prime |
-    |-------|------------------------
-    | P256  |   825  |          4   |
+    | p     | prime  | doubly prime | p / 1e-3
+    |-------|---------------------------------
+    | P224  |  
+    | P256  |  1956  |         15   | 0.767  |
+    | P384  |   
 
-(up to about 500k)
- 
+
+
       N^   0  1  2  3  4  5  6  7  8  9  10 11 12
     P224  +1       -1          +1
     P256  -1       +1       +1 -1 +1

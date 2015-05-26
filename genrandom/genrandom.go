@@ -38,7 +38,7 @@ func main() {
 		h.Write([]byte(c.params.Name))
 		buf := make([]byte, c.bits)
 		v := new(big.Int)
-		for i := 0; i < c.N; i++ {
+		for i := 0; i < 1; i++ {
 			for trial := 0; ; trial++ {
 				h.Read(buf)
 				v.SetBytes(buf)

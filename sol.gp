@@ -1,11 +1,9 @@
-\g 1;
-\gm 2;
+\g 0;
+\gm 0;
 
-install(ellsea,"GGL");
 install(Fp_ellcard_SEA,"GGGL");
 allocatemem(6000000000);
 default(nbthreads,8);
-
 
 seabyj(j0, np) = {
  my(p, n, c);

@@ -17,9 +17,9 @@ type curve struct {
 
 var (
 	curves = []curve{
-		curve{4821442, elliptic.P224().Params(), 28},
-		curve{6297393, elliptic.P256().Params(), 32},
-		curve{14169135, elliptic.P384().Params(), 48},
+		curve{1000, elliptic.P224().Params(), 28},
+		curve{1000, elliptic.P256().Params(), 32},
+		curve{1000, elliptic.P384().Params(), 48},
 	}
 )
 
@@ -36,9 +36,14 @@ func main() {
 		}
 		h := sha3.NewShake256()
 		h.Write([]byte(c.params.Name))
+		h.Write([]byte(": doubly prime"))
 		buf := make([]byte, c.bits)
 		v := new(big.Int)
-		for i := 0; i < 1; i++ {
+		fmt.Fprintf(f, "[")
+		for i := 0; i < 1000; i++ {
+			if i != 0 {
+				fmt.Fprintf(f, ",")
+			}
 			for trial := 0; ; trial++ {
 				h.Read(buf)
 				v.SetBytes(buf)
@@ -46,8 +51,9 @@ func main() {
 					break
 				}
 			}
-			fmt.Fprintf(f, "0x%x\n", v)
+			fmt.Fprintf(f, "%d", v)
 		}
+		fmt.Fprintf(f, "]\n")
 		f.Close()
 	}
 }

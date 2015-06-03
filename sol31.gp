@@ -37,8 +37,8 @@ seabyj(j0, np) = {
   * If tff[1] is 0, tff[2] is the trace of Frobenius.
   */
  if(tff[1] != 0,
-    write(ffilename,
-          Strprintf("{j: %#x,\n dividesN: %u}", j0, tff[2]));
+   /* write(ffilename,
+          Strprintf("{j: %#x,\n dividesN: %u}", j0, tff[2])); */
     return());
 
  tf = tff[2];
@@ -63,7 +63,7 @@ seabyj(j0, np) = {
  * 6381714246303411047281395201974111452776397256875611698318536681406260082310843578524116439208526314749722601195373+2^20,
  * sea(j, [384, 2^384 - 2^128 - 2^96 + 2^32 - 1]));*/
 /* Sol224 */
-my(sea=seabyj); r = parfor(j=1, 2^20, sea(j, [224, 2^224 - 2^96 + 1]));
+my(sea=seabyj); r = parfor(j=1, 2^31 - 2, sea(j, [31, 2^31 - 1]));
 /* Sol256 */
 /*my(sea=seabyj); r = parfor(j=1, 2^20, sea(j, [256, 2^256 - 2^224 + 2^192 +
  * 2^96 - 1])); */

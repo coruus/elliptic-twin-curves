@@ -1,22 +1,48 @@
 \documentclass[11pt,fleqn]{article}
+\usepackage{fontspec}
+\defaultfontfeatures{ Scale = MatchLowercase }
+\defaultfontfeatures[\rmfamily]{ Scale = 1 }
+\fontspec{XITS}[Numbers=SlashedZero,Mapping=tex-text]
+
 \usepackage{amsmath}
 \usepackage{mathtools}
-\usepackage{unicode-math}
 
+\usepackage[math-style=ISO,bold-style=ISO,vargreek-shape=unicode]{unicode-math}
+\setmathfont{XITSMath}
+\setmathfont[range={\mathcal,\mathbfcal},StylisticSet=1]{XITSMath}
+
+\usepackage{tabularx}
+\usepackage[psdextra=true,pdfversion=1.7,pdfusetitle=true]{hyperref}
+
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            colorlinks=true,
+            urlcolor=blue,
+            linkcolor=blue,
+            pdfborder={0 0 0}}
+            \usepackage[open,depth=6]{bookmark}
+\usepackage{indentfirst}
+\usepackage[backend=biber,style=authoryear,natbib=true,mcite=true,hyperref=true,arxiv=abs]{biblatex}
+\addbibresource{soleil.bib}
 
 \title{Distribution of $\#E^t$ for prime-order elliptic curves: Numerical results}
 \author{David Leon Gil}
 
-\newcommand{\Z}{\ensuremath{\BbbZ_q}}
-\newcommand{\Zq}{\ensuremath{\BbbZ_q}}
-\newcommand{\Ej}{\ensuremath{E(\BbbZ_q)_j}}
-\newcommand{\Ejt}{\ensuremath{E^t(\BbbZ_j)}}
-\newcommand{\Tf}{\ensuremath{T_f(j)}}
-\newcommand{\Pa}{\ensuremath{P_{224}}}
-\newcommand{\Pb}{\ensuremath{P_{256}}}
-\newcommand{\Pc}{\ensuremath{P_{384}}}
+
+\newcommand{\Z}{\ensuremath{\BbbZ_q} }
+\newcommand{\Zq}{\ensuremath{\BbbZ_q} }
+\newcommand{\Ej}{\ensuremath{\BbbE_j(\BbbZ_q)} }
+\newcommand{\Ejt}{\ensuremath{\BbbE^t_j(\BbbZ_q))} }
+\newcommand{\Tf}{\ensuremath{T_f(j)} }
+\newcommand{\Pa}{\ensuremath{\mathup{P}_{224}} }
+\newcommand{\Pb}{\ensuremath{\mathup{P}_{256}} }
+\newcommand{\Pc}{\ensuremath{\mathup{P}_{384}} }
+\newcommand{\Pd}{\ensuremath{\mathup{M}_{255}} }
+\newcommand{\Pg}{\ensuremath{\mathup{H}_{448}} }
 
 \begin{document}
+
+\maketitle
 
 \section{Introduction}
 
@@ -25,7 +51,7 @@ may be rather wrong.
 
 \section{Prime-order curves}
 
-Let $\Zq$ be a finite field in characteristic greater than 3,
+Let $\Zq$ be a finite field in characteristic greater than 3, and
 $\Ej$ be the elliptic curve defined by
 
 \begin{equation}
@@ -40,19 +66,30 @@ and $\Ejt$ be some curve automorphic to its quadratic twist
 
 where $\beta$ is a quadratic non-residue in \Zq.
 
-Then
+Then the trace, \Tf, of \Ej, is defined by:
 
 \begin{equation}
 \begin{aligned}
-\#\Ej  =& q - \Tf + 1 \\
-\#\Ejt =& q + \Tf + 1 \\
+&\#\Ej  &= q - \Tf + 1 \\
+&\#\Ejt &= q + \Tf + 1 \\
 \end{aligned}
 \end{equation}
 
-for some \Tf, which is the trace of \Ej.
+\section{Primes}
 
-We observe that the mapping between the $j$-invariant and $c$, as
-defined in XXXX, is an isomorphism.
+We consider the SECP primes, first suggested by \autocite{Solinas}, which are,
+where $N \coloneqq 2^{32}$:
+
+\begin{equation}
+\begin{aligned}
+    \Pa &= N^7 - N^3 + N^0                \\
+    \Pb &= N^8 - N^7 + N^6 + N^3 - N^0    \\
+    \Pc &= N^{12} - N^4 - N^3 + N^1 - N^0
+\end{aligned}
+\end{equation}
+
+as well as the two curves proposed for IETF use, the nearly-Mersenne $\Pd = 2^{255}-19$
+and the Goldilocks prime $\Pg = 2^{448}-2^{224}-1$.
 
 \section{Numerical methods}
 
@@ -64,19 +101,80 @@ if $\#K$ was found to have a small prime factor.
 
 \subsection{Range} 
 
-We calculate \Tf for each \Ej for $0 < j < 2^20, j != 1728$.
+We calculate \Tf for each \Ej for $0 < j < 2^{20}, j \neq 1728$, then
+test $\#\Ej$ and $\#\Ejt$ for (pseudo-)primality.
 
-\section{Results} 
+\subsection{Results} 
 
 
-\begin{tabular}[l]{l|rrrr}
-  $q$ & $N_{\pi}$ & $N_{\pi'}$ & $N_{\pi'} / N_{\pi}$ \\
-  \Pa & \\
-  \Pb & \\
-  \Pc & \\
-  
+\begin{tabular}[l]{l|lll}
+      & $N_{\pi}$ & $N_{\pi'}$ & $N_{\pi'} / N_{\pi}$ \\
+  \Pa & 2790 & 31 & 1.11e-2 \\
+  \Pb & 1956 & 15 & 0.77e-2 \\
+  \Pc & 1131 & 20 & 1.77e-2 \\
 \end{tabular}
 
-%http://arxiv.org/pdf/0902.4332.pdf 
+\section{Stopping times for prime and doubly-prime curves}
+
+Because the above method results in fairly low precision in estimating
+$N_{\pi'} / N_{\pi}$ because of the small number of doubly-prime curves,
+we use a slightly different method, essentially similar to that of \autocite{shpar2014elltwin}.
+
+We generate a random j-invariant, $j_{0,0}$, and increment it by 1 until
+we find a doubly prime curve (using the early-stop technique both for the
+curve and its twist).
+
+We can then roughly approximate the probability of finding a doubly-prime
+curve over each field as \dots
+
+\section{Distribution of factors for the twists of prime curves}
+
+We consider the following question: 
+
+\section{Acknowledgments}
+
+The patch to PARI/GP used is derived from a patch by Michael Hamburg.
+
+\section*{Appendix. Cofactors for SafeCurves}
+
+
+Define $h(\Ej)$ as $\lbrace p^n : p^n \mid \#\Ej \rbrace \setminus \lbrace p^n : p^n \mid \#\Ejt,
+\nexists p' < p\rbrace$.
+
+This table is adapted (read stolen directly) from \cite{safecurves}.
+
+
+\newcolumntype{R}{>{\raggedright\arraybackslash}X}%
+%\begin{table}[h]
+\begin{tabularx}{\textwidth}{llR}
+\textbf{Curve}            &$h(\Ej)$ & $h(\Ejt)$ \\
+\hline
+\texttt{\footnotesize M221         }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
+\texttt{\footnotesize E222         }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}                                                                  $\\
+\texttt{\footnotesize secp224r1     }& $\scriptstyle 1  $    & $\scriptstyle 3^2 \cdot 11 \cdot 47 \cdot 3015283 \cdot 40375823 \cdot 267983539294927                 $\\
+\texttt{\footnotesize Curve1174     }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}                                                                  $\\
+\texttt{\footnotesize Curve25519    }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
+\texttt{\footnotesize BN(2,254)     }& $\scriptstyle 1  $    & $\scriptstyle 3^3 \cdot 3583 \cdot 298908837206431 \cdot 11711184643015782903697616449         $\\
+\texttt{\footnotesize brainpoolP256 }& $\scriptstyle 1  $    & $\scriptstyle 5^2 \cdot 175939 \cdot 492167257 \cdot 8062915307 \cdot 2590895598527 \cdot 4233394996199$\\
+\texttt{\footnotesize FRP256v1      }& $\scriptstyle 1  $    & $\scriptstyle 7 \cdot 439 \cdot 11760675247 \cdot 3617872258517821                             $\\
+\texttt{\footnotesize secp256r1     }& $\scriptstyle 1  $    & $\scriptstyle 3 \cdot 5 \cdot 13 \cdot 179                                                     $\\
+\texttt{\footnotesize secp256k1     }& $\scriptstyle 1  $    & $\scriptstyle 3^2 \cdot 13^2 \cdot 3319 \cdot 22639                                            $\\
+\texttt{\footnotesize E382          }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}                                                                  $\\
+\texttt{\footnotesize M383          }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
+\texttt{\footnotesize Curve383187   }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
+\texttt{\footnotesize brainpoolP384 }& $\scriptstyle 1  $    & $\scriptstyle 7 \cdot 11^2 \cdot 241 \cdot 5557 \cdot 125972502705620325124785968921221517         $\\
+\texttt{\footnotesize secp384r1     }& $\scriptstyle 1  $    & $\scriptstyle \mathbf{1}                                                                    $\\
+\texttt{\footnotesize Curve41417    }& $\scriptstyle 2^3$    & $\scriptstyle \mathbf{2^3}                                                                  $\\
+\texttt{\footnotesize Ed448         }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}                                                                  $\\
+\texttt{\footnotesize M511          }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
+\texttt{\footnotesize E521          }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}$ \\
+\hline
+\end{tabularx}
+%\end{table}
+
+
+\printbibliography
+
+%http://arxiv.org/pdf/0902.4332.pdf
 
 \end{document}

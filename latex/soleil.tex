@@ -1,0 +1,219 @@
+\documentclass[11pt,fleqn]{article}
+\usepackage{fontspec}
+\defaultfontfeatures{ Scale = MatchLowercase }
+\defaultfontfeatures[\rmfamily]{ Scale = 1 }
+\fontspec{XITS}[Numbers=SlashedZero,Mapping=tex-text]
+
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\usepackage[math-style=ISO,bold-style=ISO,vargreek-shape=unicode]{unicode-math}
+\setmathfont{XITSMath}
+\setmathfont[range={\mathcal,\mathbfcal},StylisticSet=1]{XITSMath}
+
+\usepackage{tabularx}
+\usepackage[psdextra=true,pdfversion=1.7,pdfusetitle=true]{hyperref}
+
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            colorlinks=true,
+            urlcolor=blue,
+            linkcolor=blue,
+            pdfborder={0 0 0}}
+            \usepackage[open,depth=6]{bookmark}
+\usepackage{indentfirst}
+\usepackage[backend=biber,style=authoryear,natbib=true,mcite=true,hyperref=true,arxiv=abs]{biblatex}
+\addbibresource{soleil.bib}
+
+\title{Distribution of $\#E^t$ for prime-order elliptic curves: Numerical results}
+\author{David Leon Gil}
+
+\newcommand{\Z}{\ensuremath{\BbbZ_q} }
+\newcommand{\Zq}{\ensuremath{\BbbZ_q} }
+\newcommand{\Ejt}{\ensuremath{\BbbE^t_j(\BbbZ_q))} }
+\newcommand{\Tf}{\ensuremath{T_f(j)} }
+\newcommand{\Pa}{\ensuremath{\mathup{P}_{224}} }
+\newcommand{\Pb}{\ensuremath{\mathup{P}_{256}} }
+\newcommand{\Pc}{\ensuremath{\mathup{P}_{384}} }
+\newcommand{\Pd}{\ensuremath{\mathup{M}_{255}} }
+\newcommand{\Pg}{\ensuremath{\mathup{H}_{448}} }
+
+\newcommand{\Ej}{\ensuremath{\BbbE_j} }
+\newcommand{\Ejfq}{\ensuremath{\BbbE_j(\BbbF_q)} }
+\newcommand{\Ejfqt}{\ensuremath{\widetilde{\BbbE}_j(\BbbF_q)} }
+\newcommand{\Ejfp}{\ensuremath{\BbbE_j(\BbbF_p)} }
+\newcommand{\Ejfpt}{\ensuremath{\widetilde{\BbbE}_j(\BbbF_p)} }
+
+
+\begin{document}
+
+\maketitle
+
+\section{Preface}
+
+This is a preliminary note of some numerical experiments; the results
+may be rather wrong.
+
+\section{Introduction}
+
+Twist-secure curves for elliptic curve cryptography are much in vogue
+these days; \cite{djb} and others have proposed that twist-security
+is an essential safety condition for choosing curves.
+
+\cite{curve25519} cites \cite{KaliskiJCryptology} as introducing the
+so-called ``unsafe-twist'' attack,f but I have been unable to find any
+evidence either there or in his (quite excellent) thesis, \cite{KaliskiThesis},
+that he was aware of this attack.
+
+\section{Elliptic twin curves}
+
+We follow the definitions of \autocite{ShparlinskiSutantyo}, with some minor
+modifications.
+
+Let $\Ej$ be the elliptic curve of invariant $j$, and $\Ejfq$ be its reduction
+over a finite field of characteristic $p > 5, n \geq 1$ with $p$ prime. Let
+and $t(\Ejfq)$ be the trace of Frobenius of that elliptic curve.
+
+Let $\Ejfqt$ be the non-trivial quadratic twist of $\Ejfq$ over the same field.
+
+An \emph{elliptic twin} is a pair consisting of a prime $p$, and two primes
+not equal to $p$ or $0$, $(p, {l, r})$ such that
+
+\begin{equation}
+\#\Ejfp \#\Ejfpt = l + r = 2 p + 2 - l + r
+\end{equation}
+
+It is clear that there exist elliptic twins over arbitrary prime fields, but
+the formulae of \autocite{ShparlinskiSutantyo} are not amenable to characterizing
+local fluctuations in the density of such elliptic twins holding the finite
+field fixed.
+
+\section{Primes}
+
+We consider the non-Mersenne SECP primes, standardized for the use of the
+federal government in \cite{recur}, which are, where $N \coloneqq 2^{32}$:
+
+\begin{equation}
+\begin{aligned}
+    \Pa &= N^7 - N^3 + N^0                \\
+    \Pb &= N^8 - N^7 + N^6 + N^3 - N^0    \\
+    \Pc &= N^{12} - N^4 - N^3 + N^1 - N^0
+\end{aligned}
+\end{equation}
+
+They are subset of the class of Generalized Mersennes defined by
+\autocite{solinas}.
+
+%\autocite{grangermoss},
+
+In future work, we plan to extend the study to consider the more general question
+of the distribution of group structure and curve exponent for the reduction of
+curves over fields for which the number of points is non-prime, and apply similar
+techniques with respect to the two curves proposed for IETF use, the nearly-Mersenne
+$\Pd = 2^{255}-19$ and the Hamburg-Solinas trinomial $\Pg = 2^{448}-2^{224}-1$.
+\footnote{The Hamburg primes are "Karatsuba-friendly" \cite{Hamburg}, who was the
+first to realize that these are extremely efficient for elliptic curve cryptography.}
+
+(We probably won't extend this work to the Mersenne $\textup{M}_{521}$, as that
+particular calculation is pestiferous.)
+
+\section{Numerical methods}
+
+\subsection{Finding prime-order curves}
+
+A slightly modified version of PARI/GP was used to calculate the
+traces of prime-order curves, based on code of \cite{Hamburg}.
+(The particular code used for this version of this paper may be
+found at \autocite{junkpari}.) Point-counting was aborted early
+if $\#\Ej$ was found to have a small prime factor.
+
+\subsection{Range} 
+
+We calculate \Tf for each \Ej for $0 < j < 2^{20}, j \neq 1728$, then
+test $\#\Ej$ and $\#\Ejt$ for (pseudo-)primality.
+
+(For this to be a reasonable procedure, it requires the assumption that
+j-invariant is not correlated with the probability of the curve being
+an elliptic twin, even locally.)
+
+\subsection{Results} 
+
+\begin{tabular}[l]{l|lll}
+      & $N_{\pi}$ & $N_{\pi'}$ & $N_{\pi'} / N_{\pi}$ \\
+  \Pa & 2790 & 31 & 1.1e-2 \\
+  \Pb & 1956 & 15 & 0.8e-2 \\
+  \Pc & 1131 & 20 & 1.8e-2 \\
+\end{tabular}
+
+\section{Future work}
+
+Because the above method results in fairly low precision in estimating
+$N_{\pi'} / N_{\pi}$ because of the small number of doubly-prime curves,
+we plan to use two slightly different methods, essentially similar to those
+of \autocite{ShparlinskiSutantyo}.
+
+\emph{Procedure 1.} We generate $N$ random j-invariant, $(j_{0,0}, ..., $j_{N,0})$,
+and increment each by 1 until we find a doubly prime curve.
+
+\emph{Procedure 2.} We generate random $j$-invariants repeatedly until we collect
+N primes.
+
+The procedure we will use to generate the random number is, for procedure one
+
+\begin{code}
+for i in range(N):
+  ok = False
+  while not ok:
+    input = shake256("Elliptic Twins over GF(0x%x), procedure 1: i=%u, try=%u".format(P, j, try))
+    maybep = l2b(shake256.squeeze(bitlen / 8))
+    if maybep < P:
+      ok = True
+  js[i] = maybep
+\end{code}
+
+and similarly for procedure 2.
+
+\section{Acknowledgments}
+
+The patch to PARI/GP used is derived from a patch by Michael Hamburg.
+
+All of the non-trivial work is entirely derived from prior work by Robert
+Ransom. The only novelty is in the application to this (very particular)
+question.
+
+\section*{Appendix. Cofactors for SafeCurves}
+
+This table is adapted (read stolen directly) from \cite{safecurves}.
+
+\newcolumntype{R}{>{\raggedright\arraybackslash}X}%
+%\begin{table}[h]
+\begin{tabularx}{\textwidth}{llR}
+\textbf{Curve}            &$h(\Ej)$ & $h(\Ejt)$ \\
+\hline
+\texttt{\footnotesize M221         }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
+\texttt{\footnotesize E222         }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}                                                                  $\\
+\texttt{\footnotesize secp224r1     }& $\scriptstyle 1  $    & $\scriptstyle 3^2 \cdot 11 \cdot 47 \cdot 3015283 \cdot 40375823 \cdot 267983539294927                 $\\
+\texttt{\footnotesize Curve1174     }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}                                                                  $\\
+\texttt{\footnotesize Curve25519    }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
+\texttt{\footnotesize BN(2,254)     }& $\scriptstyle 1  $    & $\scriptstyle 3^3 \cdot 3583 \cdot 298908837206431 \cdot 11711184643015782903697616449         $\\
+\texttt{\footnotesize brainpoolP256 }& $\scriptstyle 1  $    & $\scriptstyle 5^2 \cdot 175939 \cdot 492167257 \cdot 8062915307 \cdot 2590895598527 \cdot 4233394996199$\\
+\texttt{\footnotesize FRP256v1      }& $\scriptstyle 1  $    & $\scriptstyle 7 \cdot 439 \cdot 11760675247 \cdot 3617872258517821                             $\\
+\texttt{\footnotesize secp256r1     }& $\scriptstyle 1  $    & $\scriptstyle 3 \cdot 5 \cdot 13 \cdot 179                                                     $\\
+\texttt{\footnotesize secp256k1     }& $\scriptstyle 1  $    & $\scriptstyle 3^2 \cdot 13^2 \cdot 3319 \cdot 22639                                            $\\
+\texttt{\footnotesize E382          }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}                                                                  $\\
+\texttt{\footnotesize M383          }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
+\texttt{\footnotesize Curve383187   }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
+\texttt{\footnotesize brainpoolP384 }& $\scriptstyle 1  $    & $\scriptstyle 7 \cdot 11^2 \cdot 241 \cdot 5557 \cdot 125972502705620325124785968921221517         $\\
+\texttt{\footnotesize secp384r1     }& $\scriptstyle 1  $    & $\scriptstyle \mathbf{1}                                                                    $\\
+\texttt{\footnotesize Curve41417    }& $\scriptstyle 2^3$    & $\scriptstyle \mathbf{2^3}                                                                  $\\
+\texttt{\footnotesize Ed448         }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}                                                                  $\\
+\texttt{\footnotesize M511          }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
+\texttt{\footnotesize E521          }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}$ \\
+\hline
+\end{tabularx}
+%\end{table}
+
+
+\printbibliography
+
+\end{document}

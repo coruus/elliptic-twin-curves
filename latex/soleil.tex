@@ -62,10 +62,16 @@ Twist-secure curves for elliptic curve cryptography are much in vogue
 these days; \cite{curve25519} and others have proposed that twist-security
 is an essential safety condition for choosing curves.
 
+Relatively few twist-secure curves have been specified of short-Weierstrass
+form. 
+
 \cite{curve25519} cites \cite{KaliskiJCryptology} as introducing the
-so-called ``unsafe-twist'' attack,f but I have been unable to find any
-evidence either there or in his (quite excellent) thesis, \cite{KaliskiThesis},
-that he was aware of this attack.
+so-called ``unsafe-twist'' attack, but I have been unable to find any
+evidence either in that paper or in his (quite excellent) thesis,
+\cite{KaliskiThesis}, that he was aware of the attack.\footnote{Kaliski's
+construction of an elliptic-curve-and-twist-based random number generator
+does, however, require that discrete log be hard on both the curve and its
+twist, as he explicitly notes.}
 
 \section{Elliptic twin curves}
 
@@ -78,11 +84,11 @@ and $t(\Ejfq)$ be the trace of Frobenius of that elliptic curve.
 
 Let $\Ejfqt$ be the non-trivial quadratic twist of $\Ejfq$ over the same field.
 
-An \emph{elliptic twin} is a pair consisting of a prime $p$, and two primes
-not equal to $p$ or $0$, $(p, {l, r})$ such that
+An \emph{elliptic twin} is a pair consisting of a prime $p$, and a set of two
+primes not equal to $p$ or $0$, $\lbrace l, r \rbrace$, such that
 
 \begin{equation}
-\#\Ejfp \#\Ejfpt = l + r = 2 p + 2 - l + r
+\#\Ejfp + \#\Ejfpt = l + r = 2 p + 2 - l + r
 \end{equation}
 
 It is clear that there exist elliptic twins over arbitrary prime fields, but
@@ -109,12 +115,13 @@ They are subset of the class of Generalized Mersennes defined by
 %\autocite{grangermoss},
 
 In future work, we plan to extend the study to consider the more general question
-of the distribution of group structure and curve exponent for the reduction of
-curves over fields for which the number of points is non-prime, and apply similar
-techniques with respect to the two curves proposed for IETF use, the nearly-Mersenne
-$\Pd = 2^{255}-19$ and the Hamburg-Solinas trinomial $\Pg = 2^{448}-2^{224}-1$.
-\footnote{The Hamburg primes are ``Karatsuba-friendly'' \cite{Hamburg}, who was the
-first to publish an algorithm that fully takes advantage of their special form.}
+of the distribution of group structure and curve exponent for reductions of
+curves over fields for which their number of integral points is non-prime, and apply
+similar techniques with respect to the two curves proposed for IETF use, the
+nearly-Mersenne $\Pd = 2^{255}-19$ and the Hamburg-Solinas trinomial $\Pg = 2^{448}-2^{224}-1$.
+\footnote{The Hamburg primes are ``Karatsuba-friendly'' and \autocite{Hamburg}
+was the first to publish an algorithm that fully takes advantage of their special
+form.}
 
 (We probably won't extend this work to the Mersenne $\textup{M}_{521}$, as that
 particular calculation is pestiferously large.)
@@ -124,21 +131,24 @@ particular calculation is pestiferously large.)
 \subsection{Finding prime-order curves}
 
 A slightly modified version of PARI/GP was used to calculate the
-traces of prime-order curves, based on code of \cite{Hamburg}.
+traces of prime-order curves, based on code of \autocite{HamburgPARI}.
 (The particular code used for this version of this paper may be
 found at \autocite{junkpari}.) Point-counting was aborted early
 if $\#\Ej$ was found to have a small prime factor.
 
-\subsection{Range} 
+\subsection{Results, initial experiment} 
 
 We calculate \Tf for each \Ej for $0 < j < 2^{20}, j \neq 1728$, then
 test $\#\Ej$ and $\#\Ejt$ for (pseudo-)primality.
 
-(For this to be a reasonable procedure, it requires the assumption that
+For this to be a reasonable procedure, it requires the assumption that
 $j$-invariant is not correlated with the probability of the curve being
-an elliptic twin, even on a local scale of $2^{20}$.)
+an elliptic twin, even on a local scale of $2^{20}$.
 
-\subsection{Results} 
+The strictly stronger hypothesis that small values of short-Weierstrass-form
+$b$, for arbitrary fixed $a$, are not correlated on this scale with any
+cryptographically relevant properties of curves is standard, but I am not
+aware of any evidence for this hypothesis.
 
 \begin{tabular}[l]{l|lll}
       & $N_{\pi}$ & $N_{\pi'}$ & $N_{\pi'} / N_{\pi}$ \\
@@ -156,10 +166,10 @@ of \autocite{ShparlinskiSutantyo}.
 
 \emph{Procedure 1.} We generate $N$ random $j$-invariants,
 $(j_{0,0}, \ldots, j_{N,0})$, and increment each by 1 until we
-find a doubly prime curve.
+find a twin prime curve.
 
-\emph{Procedure 2.} We generate random $j$-invariants repeatedly until we collect
-N primes.
+\emph{Procedure 2.} We generate random $j$-invariants repeatedly
+until we collect N prime and N twin prime curves.
 
 The procedure we will use to generate the random $j$-invariants is, for both procedures,
 
@@ -179,84 +189,100 @@ for i in range(N):
 
 and similarly for procedure 2.
 
+
+
 \section{Concluding, mostly irrelevant aside}
 
 The quantity $1 / \p(p) = N_{\pi}(\p) / N_{\pi'}(\p)$ is an estimator for
 the number of trials required, when choosing a prime curve uniformly at
 random in $\BbbF_q$ for that curve to be an elliptic twin.
 
-The probability, however, that no elliptic curves in a set of $N$
+The probability, however, that no elliptic curves in a set of $N$ curves
 are elliptic twins is, of course,
 
 \begin{equation}
-1 - \lparen \prod_{0 \leq i < n} 1 - \p_q \rparen
+1 - \lparen \prod_{0 \leq i < n} (1 - \p_i) \rparen
 \end{equation}
 
-With respect to the curves generated by the NSA for SECP, and
-subsequently standardized by NIST, this calculation gives a probability
-of very approximately $< 5\%$ of any of the curves over $\Pa, \Pb, \Pc$
-being elliptic twins.
+With respect to the curves generated by the NSA for \autocite{SECP1}, and
+subsequently standardized by \autocite{recur}, this calculation gives a
+probability of very approximately $> 95\%$ that \emph{none} of the curves
+over $\Pa, \Pb,$ and $\Pc$ would be an elliptic twin.
 
-A Bayesian might thus conclude that it is more likely than not that
-the NSA's curves were not generated by a process that samples from
-a uniform distribution on prime-order curves over the chosen prime
-fields.
+But the curve over P-384 \emph{is} an elliptic twin.
 
-This suggests that the NSA's choice of seeds for the ``random'' prime
-curves were subject to additional safety criteria not yet publicly
-disclosed. (Or, of course, things with 10\% probability do happen quite
-frequently.)
+One might thus conclude that it is more likely than not that the NSA's 
+curves were not generated by a process that samples from a uniform
+distribution on prime-order curves over the chosen prime fields.\footnote{
+Why, then, don't all of \Pa, \Pb, and \Pc have safe twists? Note that the
+probability of that would be \prod_{0 \leq i < n} (1 - \p_i), or less than
+1.5e-6, or a roughly 1 in 630,000 chance.}
+
+In particular, this suggests that the NSA's choice of seeds for the
+``random'' prime curves were subject to additional safety criteria
+not yet publicly disclosed. (Or, of course, that things with 5\%
+probability aren't terribly rare events...\footnote{In partial defense of
+the NSA: Suppose that it did, in fact, draw the seeds for the SECP prime
+curves uniformly at random until it found prime order curves. There is no
+good way of the NSA ``proving'' that it followed this procedure honestly,
+even if it did. This reinforces the importance of some ``rigidity''
+criterion, as per \autocite{NUMS}.})
 
 In addition, it suggests that the fever for ``twist-security'' which
 has taken grip of the cryptographic community is potentially dangerous:
-These are a small class of elliptic curves, and there is no evidence that
+These are a smallish class of elliptic curves, and there is no evidence that
 -- provided an implementation is not vulnerable to a small-twist attack --
-they possess \emph{less} structure than a non-twist-secure curve.
+they possess either more or \emph{less} structure than a non-twist-secure
+curve.
 
 \section{Acknowledgments}
 
-The patch to PARI/GP used is derived from a patch by Michael Hamburg.
+This work was inspired by Daniel Bernstein's SafeCurves website, and a
+frustratingly long search for a twist-secure curve over $M_{607}$.
+
+Many thanks to Robert Ransom for his skeptical comments, which have
+helped clarify the argument of this note.
+
+The patch to PARI/GP is derived from a patch by Michael Hamburg.
 
 All of the non-trivial mathematics is entirely derived from prior work by
-Robert Ransom, Igor Shparlinski, and others. The only novelty, if it can
-be called that, is in the application to this particular question.
+Igor Shparlinski and others. The only novelty, if it can be called that,
+is in the application to this particular question.
 
 \section*{Appendix. Cofactors for SafeCurves}
 
 This table is adapted (read stolen directly) from \cite{safecurves}.
-Curves for which the cofactor is minimal in either Weierstrass or
-Edwards form are highlighted.
-
-% TODO The columns have been sorted by the ratio of the exponent of the twist to the exponent of the curve
+The rows have been sorted by the cofactor of the twist of the curve.
+The curves for which twist-security was a stated security criterion
+during the selection process have been omitted.
 
 \newcolumntype{R}{>{\raggedright\arraybackslash}X}%
-%\begin{table}[h]
+
 \begin{tabularx}{\textwidth}{llR}
 \textbf{Curve}            &$h(\Ej)$ & $h(\Ejt)$ \\
 \hline
-\texttt{\footnotesize M221         }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
-\texttt{\footnotesize E222         }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}                                                                  $\\
+\texttt{\footnotesize secp384r1     }& $\scriptstyle 1  $    & $\scriptstyle 1                                                                                        $\\
+%\hline
+%\texttt{\footnotesize M221          }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                                      $\\
+%\texttt{\footnotesize E222          }& $\scriptstyle 2^2$    & $\scriptstyle 2^2                                                                                      $\\
+%\texttt{\footnotesize Curve1174     }& $\scriptstyle 2^2$    & $\scriptstyle 2^2                                                                                      $\\
+%\texttt{\footnotesize Curve25519    }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                                      $\\
+%\texttt{\footnotesize E382          }& $\scriptstyle 2^2$    & $\scriptstyle 2^2                                                                                      $\\
+%\texttt{\footnotesize M383          }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                                      $\\
+%\texttt{\footnotesize Curve383187   }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                                      $\\
+%\texttt{\footnotesize Ed448         }& $\scriptstyle 2^2$    & $\scriptstyle 2^2                                                                                      $\\
+%\texttt{\footnotesize M511          }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                                      $\\
+%\texttt{\footnotesize E521          }& $\scriptstyle 2^2$    & $\scriptstyle 2^2                                                                                      $\\
+%\texttt{\footnotesize Curve41417    }& $\scriptstyle 2^3$    & $\scriptstyle 2^3                                                                                      $\\
+%\hline
+\texttt{\footnotesize secp256r1     }& $\scriptstyle 1  $    & $\scriptstyle 3 \cdot 5 \cdot 13 \cdot 179                                                             $\\
+\texttt{\footnotesize secp256k1     }& $\scriptstyle 1  $    & $\scriptstyle 3^2 \cdot 13^2 \cdot 3319 \cdot 22639                                                    $\\
+\texttt{\footnotesize FRP256v1      }& $\scriptstyle 1  $    & $\scriptstyle 7 \cdot 439 \cdot 11760675247 \cdot 3617872258517821                                     $\\
 \texttt{\footnotesize secp224r1     }& $\scriptstyle 1  $    & $\scriptstyle 3^2 \cdot 11 \cdot 47 \cdot 3015283 \cdot 40375823 \cdot 267983539294927                 $\\
-\texttt{\footnotesize Curve1174     }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}                                                                  $\\
-\texttt{\footnotesize Curve25519    }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
-\texttt{\footnotesize BN(2,254)     }& $\scriptstyle 1  $    & $\scriptstyle 3^3 \cdot 3583 \cdot 298908837206431 \cdot 11711184643015782903697616449         $\\
 \texttt{\footnotesize brainpoolP256 }& $\scriptstyle 1  $    & $\scriptstyle 5^2 \cdot 175939 \cdot 492167257 \cdot 8062915307 \cdot 2590895598527 \cdot 4233394996199$\\
-\texttt{\footnotesize FRP256v1      }& $\scriptstyle 1  $    & $\scriptstyle 7 \cdot 439 \cdot 11760675247 \cdot 3617872258517821                             $\\
-\texttt{\footnotesize secp256r1     }& $\scriptstyle 1  $    & $\scriptstyle 3 \cdot 5 \cdot 13 \cdot 179                                                     $\\
-\texttt{\footnotesize secp256k1     }& $\scriptstyle 1  $    & $\scriptstyle 3^2 \cdot 13^2 \cdot 3319 \cdot 22639                                            $\\
-\texttt{\footnotesize E382          }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}                                                                  $\\
-\texttt{\footnotesize M383          }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
-\texttt{\footnotesize Curve383187   }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
-\texttt{\footnotesize brainpoolP384 }& $\scriptstyle 1  $    & $\scriptstyle 7 \cdot 11^2 \cdot 241 \cdot 5557 \cdot 125972502705620325124785968921221517         $\\
-\texttt{\footnotesize secp384r1     }& $\scriptstyle 1  $    & $\scriptstyle \mathbf{1}                                                                    $\\
-\texttt{\footnotesize Curve41417    }& $\scriptstyle 2^3$    & $\scriptstyle \mathbf{2^3}                                                                  $\\
-\texttt{\footnotesize Ed448         }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}                                                                  $\\
-\texttt{\footnotesize M511          }& $\scriptstyle 2^3$    & $\scriptstyle 2^2                                                                  $\\
-\texttt{\footnotesize E521          }& $\scriptstyle 2^2$    & $\scriptstyle \mathbf{2^2}$ \\
+\texttt{\footnotesize brainpoolP384 }& $\scriptstyle 1  $    & $\scriptstyle 7 \cdot 11^2 \cdot 241 \cdot 5557 \cdot 125972502705620325124785968921221517             $\\
 \hline
 \end{tabularx}
-%\end{table}
-
 
 \printbibliography
 

@@ -8,7 +8,11 @@ Please don't try to interpret the data too much.
 
 --
 
-Letting
+Running
+
+    grep deltaj *.jx | cut -d ':' -f3  | tr -s '\n' ' '
+
+to extract the stopping times, and letting
 
     stopping_times = [
       0x19371,  0x34d4a,  0x61bd,  0x84af,

@@ -5,21 +5,23 @@ Let `F_p` be a finite field over a prime `p`, and
 
     y^2 = x^3 + 36*x/(j0 - 1728) + -1*(j0 - 1728)
 
-We consider the "Solinas primes",
+We consider the Solinas primes
 
-    P_224 = N^7 - N^3 + N^0
-    P_256 = N^8 - N^7 + N^6 + N^3 - N^0
-    P_384 = N^12 - N^4 - N^3 + N^1 - N^0
+    P_224 = N^7 - N^3 + 1
+    P_256 = N^8 - N^7 + N^6 + N^3 - 1
+    P_384 = N^12 - N^4 - N^3 + N^1 - 1
 
-where `N = 2^32`,
-
-the nearly-Mersenne prime
+where `N = 2^32`, the nearly-Mersenne prime
 
     M255 = 2^255 - 19
 
-and the Hamburg prime
+and the prime
 
     H448 = 2^448 - 2^224 - 1
+    
+(Hamburg was the first to point out that the subset
+of the Generalized Mersenne Numbers defined by Solinas
+which take the form N^2 - N - 1 are "Karatsuba-friendly".)
 
 --
 
@@ -55,14 +57,16 @@ interval `0 < j < 2^20` are given by:
 --
 
 sol-like primes that are 3 mod 4:
-2^384 - 2^128 - 2^96  + 2^32  - 1
-2^384 - 2^224 - 2^160 + 2^32  - 1
-2^384 - 2^288 + 2^192 - 2^32  - 1
-2^384 - 2^288 + 2^64  + 2^32  - 1
-2^384 - 2^320 + 2^192 + 2^128 - 1
-2^384 - 2^320 + 2^288 - 2^160 - 1
-2^384 - 2^320 + 2^288 - 2^96  - 1
-2^384 - 2^352 + 2^224 + 2^64  - 1
+    2^384 - 2^128 - 2^96  + 2^32  - 1
+    2^384 - 2^224 - 2^160 + 2^32  - 1
+    2^384 - 2^288 + 2^192 - 2^32  - 1
+    2^384 - 2^288 + 2^64  + 2^32  - 1
+    2^384 - 2^320 + 2^192 + 2^128 - 1
+    2^384 - 2^320 + 2^288 - 2^160 - 1
+    2^384 - 2^320 + 2^288 - 2^96  - 1
+    2^384 - 2^352 + 2^224 + 2^64  - 1
+
+
 ```pari
 sol_like = [2^384 - 2^128 - 2^96  + 2^32  - 1,
             2^384 - 2^224 - 2^160 + 2^32  - 1,

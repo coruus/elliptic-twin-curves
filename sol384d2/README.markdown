@@ -1,12 +1,16 @@
 # NOTE
 
 These results, though they are a relatively large sample of curves
-reduced over P-384, are incomplete: They are the first 200 of a set
+reduced over P-384, are incomplete: They are the first 411 of a set
 of 1000. 
 
-Please don't try to interpret the data too much. (It is biased against
-very large gaps between elliptic twins in j-invariant; and some gaps have
-taken nearly a week to explore.)
+116178
+134xxx
+
+
+Please don't try to interpret the data too much. (It is probably biased
+against very large gaps between elliptic twins in j-invariant; and some
+gaps have taken nearly a week to explore.)
 
 --
 
@@ -29,6 +33,9 @@ float(len(stopping_times)) / sum(stopping_times)
 which is a (bad) estimator for the probability of a randomly selected
 curve being an elliptic twin. (It is *not* the probability, given
 that a curve has prime order, of that curve being an elliptic twin.)
+
+
+
 
 Bootstrapping gives, for 0.01, 0.05, 0.99 of medians:
 

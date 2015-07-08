@@ -1,0 +1,1 @@
+	 parallel --ungroup -j36 ../junk-pari/Olinux-x86_64/gp-sta ::: ../gpfiles/*.gp

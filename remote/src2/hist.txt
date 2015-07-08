@@ -1,0 +1,1 @@
+344	 fc -nl 0 >> history.txt

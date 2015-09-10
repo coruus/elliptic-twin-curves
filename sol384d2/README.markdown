@@ -21,7 +21,18 @@ for j0 in generated_j0s:
 The `generated_j0s` were generated using a [Go script](https://github.com/coruus/elliptic-twin-curves/blob/master/genrandom/genrandom.go), and may be found
 in [P-384.txt](https://github.com/coruus/elliptic-twin-curves/blob/master/sol384d2/misc/P-384.txt)
 
---
+## Reference list
+
+- ["SafeCurves: Twist security"](http://safecurves.cr.yp.to/twist.html)
+
+- ["S. D. Galbraith, J. F. McKee, The probability that the number of points on an elliptic curve over a finite field is prime. 2000."](https://www.math.auckland.ac.nz/~sgal018/cm.pdf)
+
+- ["Shparlinski I and Sutantyo D. Distribution of elliptic twin primes in isogeny and isomorphism classes. 2014"](http://www.researchgate.net/publication/259506269_Distribution_of_elliptic_twin_primes_in_isogeny_and_isomorphism_classes)
+
+- ["[curves] Twist security and induced distributions"](https://moderncrypto.org/mail-archive/curves/2014/000336.html)
+
+
+## Results
 
 These results, though they are a relatively large sample of curves
 reduced over P-384, are incomplete: They are the first 411 of a set

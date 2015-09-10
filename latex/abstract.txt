@@ -1,5 +1,0 @@
-We report results from a preliminary numerical experiment on
-the distribution of elliptic twins over the finite fields defined for
-the primes P-224, P-256, and P-384. The results indicate that, if chosen
-uniformly at random from the set of prime order curves, the probability
-of any of those curves having cofactor 1 <= \%4.

@@ -1,11 +1,31 @@
 # P-384
 
+Perform the following experiment, described in Sage pseudocode:
+
+```
+p = 2^384 - 2^128 - 2^96 + 2^32 - 1
+F384 = GF(p)
+for j0 in generated_j0s:
+  j = j0 - 1
+  elliptic_twin = False
+  while not elliptic_twin:
+    j += 1
+    E = EllipticCurve_from_j0(F384(j))
+    tf = E.trace()
+    nE = p - tf + 1
+    nT = p + tf + 1
+    elliptic_twin = isprime(nE) and isprime(nT)
+  # write output
+```
+
+The `generated_j0s` were generated using a [Go script](https://github.com/coruus/elliptic-twin-curves/blob/master/genrandom/genrandom.go), and may be found
+in [P-384.txt](https://github.com/coruus/elliptic-twin-curves/blob/master/sol384d2/misc/P-384.txt)
 
 --
 
 These results, though they are a relatively large sample of curves
 reduced over P-384, are incomplete: They are the first 411 of a set
-of 1000. 
+of 1000. (Which is unlikely to be completed due to resource constraints.)
 
 Please don't try to interpret the data too much. (It is probably biased
 against very large gaps between elliptic twins in j-invariant; and some
